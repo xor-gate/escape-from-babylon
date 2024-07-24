@@ -1,0 +1,7 @@
+.DS_Store
+socks5-ssh-proxy
+resources/ssh_*
+config_release.go
+socks5-ssh-proxy.release
+*.exe
+*.zip
