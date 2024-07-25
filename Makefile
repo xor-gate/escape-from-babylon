@@ -1,7 +1,7 @@
 SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go 
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
 
-all: socks5-ssh-proxy socks5-ssh-proxy.release
+all: socks5-ssh-proxy socks5-ssh-proxy.release socks5-ssh-proxy.exe
 test: socks5-ssh-proxy
 	cp socks5-ssh-proxy ~/.ssh; cd ~/.ssh; ~/.ssh/socks5-ssh-proxy
 test-release: socks5-ssh-proxy.release
@@ -12,11 +12,12 @@ socks5-ssh-proxy.release: resources $(SOURCES)
 	go build -tags release -o $@
 win: socks5-ssh-proxy.exe
 socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
-	GOOS=windows GOARCH=amd64 $(GARBLE_BIN) build -tags release -o $@
-win-package: socks5-ssh-proxy.exe
-	cp socks5-ssh-proxy.exe chrome-helper.exe
-	zip -eP resistanceIsFutile ChromeBrowserPlugin.zip chrome-helper.exe
-	rm -f chrome-helper.exe
+	GOOS=windows GOARCH=amd64 $(GARBLE_BIN) build -ldflags -H=windowsgui -tags release -o $@
+win-package: ChromeProxyHelperPlugin.zip
+ChromeProxyHelperPlugin.zip: socks5-ssh-proxy.exe
+	cp socks5-ssh-proxy.exe chrome-proxy-helper.exe
+	zip -eP resistanceIsFutile ChromeProxyHelperPlugin.zip chrome-proxy-helper.exe
+	rm -f chrome-proxy-helper.exe
 install-deps: $(GARBLE_BIN)
 $(GARBLE_BIN):
 	go install mvdan.cc/garble@v0.12.1
@@ -25,6 +26,8 @@ clean:
 	rm -f *.zip
 	rm -f socks5-ssh-proxy
 	rm -f socks5-ssh-proxy.release
+clean-all: clean clean-key
+clean-key:
 	rm -f resources/ssh*
 
 config_release.go:
