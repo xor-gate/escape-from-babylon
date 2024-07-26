@@ -47,7 +47,7 @@ jobs:
       - name: Store release artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist-folder
+          name: dist-release
           path: |
             dist
 
@@ -97,7 +97,7 @@ jobs:
       - name: Store release artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist-dll
+          name: dist-release-dll
           path: |
             dist
 
@@ -116,12 +116,12 @@ jobs:
       - name: Download release artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: dist-release
 
       - name: Download release-dll artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist-dll
+          name: dist-release-dll
 
       - name: List files
         run: "dir /A-D /S /B"
