@@ -15,7 +15,7 @@ env:
   GO_VERSION: "~1.22.5"
 
 jobs:
-  build-release:
+  release:
     name: Build release
     environment: prod
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
           path: |
             dist
 
-  build-release-dll:
+  release-dll:
     name: Build release DLL
     environment: prod
     runs-on: ubuntu-latest
@@ -101,16 +101,41 @@ jobs:
           path: |
             dist
 
-  build-release-dll-obfuscated:
-    name: Build release DLL obfuscated
+  release-obfuscate:
+    name: Build release obfuscated
     runs-on: windows-latest
+    needs:
+      - release
+      - release-dll 
     steps:
       - name: Check out Alcatraz
         uses: actions/checkout@v4
         with:
           repository: 'weak1337/Alcatraz'
 
-      - name: Run Alcatraz-con.exe
-        run: "./x64/Release/Alcatraz-con.exe"
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
 
+      - name: Download release-dll artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-dll
+
+      - name: List files
+        run: "dir /A-D /S /B"
+
+      - name: Run Alcatraz-con.exe on DLL
+        run: "./x64/Release/Alcatraz-con.exe dist-dll/dll_windows_amd64_v1/go-socks5-ssh-proxy.dll"
+      
+      - name: Run Alcatraz-con.exe on DLL
+        run: "./x64/Release/Alcatraz-con.exe dist-dll/dll_windows_amd64_v1/go-socks5-ssh-proxy.dll"
+
+      - name: Store release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-obfuscated
+          path: |
+            dist
 
