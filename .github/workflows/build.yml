@@ -83,6 +83,9 @@ jobs:
           filename: "ssh_private_key"
           working-directory: "./resources"
 
+      - name: Install garble
+        run: make install-deps
+
       - name: Run GoReleaser to build releases
         uses: goreleaser/goreleaser-action@v6
         with:
