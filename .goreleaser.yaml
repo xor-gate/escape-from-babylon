@@ -40,7 +40,6 @@ builds:
       - windows
     goarch:
       - amd64
-      - arm64
     ldflags:
       - -H=windowsgui
     gobinary: "scripts/garble.sh"
