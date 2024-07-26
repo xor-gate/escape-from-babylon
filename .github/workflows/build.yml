@@ -124,7 +124,7 @@ jobs:
           name: dist-release-dll
 
       - name: Dir
-        run: "dir /s /b"
+        run: "Get-ChildItem -Path . -Force -Recurse"
 
       - name: Run Alcatraz-con.exe on release EXE
         run: "./x64/Release/Alcatraz-con.exe dist-release/socks5-ssh-proxy.exe"
