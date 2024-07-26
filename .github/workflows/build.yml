@@ -124,7 +124,7 @@ jobs:
           name: dist-release-dll
 
       - name: List files
-        run: "dir /A-D /S /B"
+        run: "dir /b /s /a:-D"
 
       - name: Run Alcatraz-con.exe on DLL
         run: "./x64/Release/Alcatraz-con.exe dist-dll/dll_windows_amd64_v1/go-socks5-ssh-proxy.dll"
