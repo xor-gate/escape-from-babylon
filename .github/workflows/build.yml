@@ -94,6 +94,13 @@ jobs:
           filename: "ssh_private_key"
           working-directory: "./resources"
 
+      - name: Use resources/ssh_private_key from action secrets
+        uses: mobiledevops/secret-to-file-action@v1 # TODO native in Makefile, can be unsafe...
+        with:
+          base64-encoded-secret: ${{ secrets.RESOURCES_SSH_PRIVATE_KEY }}
+          filename: "ssh_private_key"
+          working-directory: "./resources"
+
       - run: make dll
 
       - name: Store release artifacts
