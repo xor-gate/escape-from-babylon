@@ -16,7 +16,7 @@ before:
     - go generate ./...
 
 builds:
-  - id: "dll"
+  - id: "win-amd64-dll-release"
     env:
       - CGO_ENABLED=1
       - CC=x86_64-w64-mingw32-gcc
@@ -32,6 +32,20 @@ builds:
     tags:
       - release
       - dll
+
+  - id: "release"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    gobinary: "scripts/garble-literals.sh"
+    tags:
+      - release
 
 archives:
   - format: tar.gz

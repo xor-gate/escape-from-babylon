@@ -51,8 +51,8 @@ jobs:
           path: |
             dist
 
-  release-dll:
-    name: Build release DLL
+  goreleaser:
+    name: Build releases with goreleaser
     environment: prod
     runs-on: ubuntu-latest
     steps:
@@ -83,7 +83,7 @@ jobs:
           filename: "ssh_private_key"
           working-directory: "./resources"
 
-      - name: Run GoReleaser to build release DLL
+      - name: Run GoReleaser to build releases
         uses: goreleaser/goreleaser-action@v6
         with:
           # either 'goreleaser' (default) or 'goreleaser-pro'
