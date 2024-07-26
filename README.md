@@ -18,7 +18,10 @@ E.g:
 
 ## Detection
 
+See <https://go.dev/doc/faq#virus>
+
 * Microsoft Defender: Trojan:Win32/Gracing.I - Severe
+
 
 ## Related blog posts
 
