@@ -108,7 +108,7 @@ jobs:
       - name: Check out Alcatraz
         uses: actions/checkout@v4
         with:
-          repository: 'https://github.com/weak1337/Alcatraz'
+          repository: 'weak1337/Alcatraz'
 
       - name: Run Alcatraz-con.exe
         run: "./x64/Release/Alcatraz-con.exe"
