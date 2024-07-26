@@ -103,7 +103,7 @@ jobs:
 
   build-release-dll-obfuscated:
     name: Build release DLL obfuscated
-    runs-on: windows
+    runs-on: windows-latest
     steps:
       - name: Check out Alcatraz
         uses: actions/checkout@v4

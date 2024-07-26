@@ -59,7 +59,8 @@ Following detections have been tested:
 ## macOS
 
 * go
-* go-releaser
+* upx
+* goreleaser
 * mingw-w64 (for building the windows dll)
 
 ## Related information
