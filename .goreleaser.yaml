@@ -27,6 +27,7 @@ builds:
       - amd64
     ldflags:
       - -H=windowsgui
+    gobinary: "scripts/garble-literals.sh"
     buildmode: c-shared
     tags:
       - release
