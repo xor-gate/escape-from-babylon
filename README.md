@@ -1,6 +1,6 @@
 # socks5-ssh-proxy
 
-If HTTP(s) is filtered and outbound SSH is allowed, just create a SOCKS5 proxy. Beat the sensorship, and be free!
+If HTTP(s) is filtered and outbound SSH is allowed, just create a SOCKS5 proxy over SSH using a [Jump server](https://en.wikipedia.org/wiki/Jump_server). Beat the (corporate) sensorship, and be free!
 
 ## Background information
 
@@ -54,8 +54,17 @@ Following detections have been tested:
 * Microsoft Defender: [Trojan](https://en.wikipedia.org/wiki/Trojan_horse_(computing)):Win32/Gracing.I - Severe. Probably fixed because of packing with UPX
 * Palo Alto Networks, Inc. - Cortex [XDR](https://en.wikipedia.org/wiki/Extended_detection_and_response): detected as Suspicious (no fix yet)
 
+## Build time dependencies
+
+## macOS
+
+* go
+* go-releaser
+* mingw-w64 (for building the windows dll)
+
 ## Related information
 
+* <https://www.yourcts.com/2024/01/19/beware-of-new-go-based-malware/>
 * <https://posts.specterops.io/offensive-security-guide-to-ssh-tunnels-and-proxies-b525cbd4d4c6>
 * <https://emulator41.medium.com/golang-malware-used-by-cybercriminals-408276a276c8>
 

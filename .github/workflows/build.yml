@@ -50,3 +50,55 @@ jobs:
           name: dist-folder
           path: |
             dist
+
+  build-release-dll:
+    name: Build release DLL
+    environment: prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+          check-latest: true
+
+       - name: Set up MinGW
+         uses: egor-tensin/setup-mingw@v2
+         with:
+           platform: x64
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          # either 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: goreleaser
+          # 'latest', 'nightly', or a semver
+          version: '~> v2'
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Use config_release.go from action secrets
+        uses: mobiledevops/secret-to-file-action@v1 # TODO native in Makefile, can be unsafe...
+        with:
+          base64-encoded-secret: ${{ secrets.CONFIG_RELEASE_GO_FILE }}
+          filename: "config_release.go"
+
+      - name: Use resources/ssh_private_key from action secrets
+        uses: mobiledevops/secret-to-file-action@v1 # TODO native in Makefile, can be unsafe...
+        with:
+          base64-encoded-secret: ${{ secrets.RESOURCES_SSH_PRIVATE_KEY }}
+          filename: "ssh_private_key"
+          working-directory: "./resources"
+
+      - run: make dll
+
+      - name: Store release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-dll
+          path: |
+            dist

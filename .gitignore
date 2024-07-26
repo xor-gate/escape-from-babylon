@@ -7,3 +7,5 @@ socks5-ssh-proxy.release
 *.base64
 *.exe
 *.zip
+
+dist/
