@@ -84,7 +84,7 @@ jobs:
           working-directory: "./resources"
 
       - name: Install upx
-        run: sudo apt upx
+        run: sudo apt install upx
 
       - name: Install garble
         run: make install-deps
