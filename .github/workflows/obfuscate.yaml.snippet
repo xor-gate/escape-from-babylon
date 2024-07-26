@@ -1,0 +1,58 @@
+  release-obfuscate:
+    name: Build release obfuscated
+    runs-on: windows-latest
+    needs:
+      - release
+      - release-dll 
+    steps:
+      - name: Check out Alcatraz
+        uses: actions/checkout@v4
+        with:
+          repository: 'weak1337/Alcatraz'
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-release
+
+      - name: Download release-dll artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-release-dll
+
+      - name: Dir
+        run: "Get-ChildItem -Path . -Force -Recurse"
+
+      - name: Run Alcatraz-con.exe on release EXE
+        run: "./x64/Release/Alcatraz-con.exe socks5-ssh-proxy.exe"
+      
+      - name: Run Alcatraz-con.exe on release DLL
+        run: "./x64/Release/Alcatraz-con.exe dll_windows_amd64_v1/go-socks5-ssh-proxy.dll"
+
+      - name: Create dist directory and move obfuscated artifacts
+        run: |
+          # Define source files and destination directory
+          $sourceFiles = @("socks5-ssh-proxy.exe", "dll_windows_amd64_v1/go-socks5-ssh-proxy.dll")
+          $destinationDir = "dist"
+
+          # Create the destination directory if it doesn't exist
+          if (-not (Test-Path -Path $destinationDir)) {
+              New-Item -ItemType Directory -Path $destinationDir
+          }
+
+          # Move each file to the destination directory
+          foreach ($file in $sourceFiles) {
+              if (Test-Path -Path $file) {
+                  Move-Item -Path $file -Destination $destinationDir
+                  Write-Output "Moved $file to $destinationDir"
+              } else {
+                  Write-Output "File $file does not exist"
+              }
+          }
+
+      - name: Store release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-release-obfuscated
+          path: |
+            dist
