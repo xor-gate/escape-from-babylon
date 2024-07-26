@@ -1,5 +1,8 @@
 SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go 
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
+GO_ENV_VARS = CGO_ENABLED=0
+
+release: socks5-ssh-proxy.release socks5-ssh-proxy.exe
 
 all: socks5-ssh-proxy socks5-ssh-proxy.release socks5-ssh-proxy.exe
 test: socks5-ssh-proxy
@@ -9,7 +12,7 @@ test-release: socks5-ssh-proxy.release
 socks5-ssh-proxy: $(SOURCES) 
 	go build -o $@
 socks5-ssh-proxy.release: resources $(SOURCES)
-	go build -tags release -o $@
+	$(GO_ENV_VARS) go build -tags release -o $@
 win: socks5-ssh-proxy.exe
 socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
 	GOOS=windows GOARCH=amd64 $(GARBLE_BIN) build -ldflags -H=windowsgui -tags release -o $@
