@@ -18,8 +18,10 @@ socks5-ssh-proxy.release: resources $(SOURCES)
 	GOOS=darwin GOARCH=amd64 $(GO_ENV_VARS) go build -tags release -o $@
 	upx $@
 win: socks5-ssh-proxy.exe
-socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
-	GOOS=windows GOARCH=amd64 $(GARBLE_BIN) build -ldflags -H=windowsgui -tags release -o $@
+#socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
+#	GOOS=windows GOARCH=amd64 $(GARBLE_BIN) build -ldflags -H=windowsgui -tags release -o $@
+socks5-ssh-proxy.exe: resources $(SOURCES)
+	GOOS=windows GOARCH=amd64 go build -ldflags -H=windowsgui -tags release -o $@
 dll: resources
 	rm -Rf dist
 	goreleaser build --snapshot
