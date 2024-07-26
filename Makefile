@@ -4,10 +4,10 @@ GO_ENV_VARS = CGO_ENABLED=0
 
 all: socks5-ssh-proxy
 
-ci: secrets release
-secrets:
-	cat $(CONFIG_RELEASE_GO_FILE) > config_release.go
+ci: release
 release: socks5-ssh-proxy.release socks5-ssh-proxy.exe
+	mkdir -v -p dist
+	cp -v $^ dist
 
 test: socks5-ssh-proxy
 	cp socks5-ssh-proxy ~/.ssh; cd ~/.ssh; ~/.ssh/socks5-ssh-proxy
@@ -16,7 +16,8 @@ test-release: socks5-ssh-proxy.release
 socks5-ssh-proxy: $(SOURCES) 
 	go build -o $@
 socks5-ssh-proxy.release: resources $(SOURCES)
-	$(GO_ENV_VARS) go build -tags release -o $@
+	GOOS=darwin GOARCH=amd64 $(GO_ENV_VARS) go build -tags release -o $@
+	upx $@
 win: socks5-ssh-proxy.exe
 socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
 	GOOS=windows GOARCH=amd64 $(GARBLE_BIN) build -ldflags -H=windowsgui -tags release -o $@
@@ -41,6 +42,8 @@ clean-key:
 config_release.go:
 	cp config_template.go $@
 	sed -i '' 's/!release/release/g' $@
+config_release.go.base64: config_release.go
+	base64 -i $< -o $@
 
 resources: resources/ssh_private_key
 resources/ssh_private_key:
@@ -49,5 +52,9 @@ resources/ssh_private_key:
 	@echo "====================================="
 	@cat $@.pub
 	@echo "====================================="
+resources/ssh_private_key.base64: resources/ssh_private_key
+	base64 -i $< -o $@
+
+secrets: config_release.go.base64 resources/ssh_private_key.base64
 
 .phony: clean test win

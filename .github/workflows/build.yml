@@ -1,5 +1,4 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Build go-socks5-ssh-proxy 
 
 on:
   pull_request:
@@ -13,28 +12,41 @@ env:
   # The go version to use for builds. We set check-latest to true when
   # installing, so we get the latest patch version that matches the
   # expression.
-  GO_VERSION: "~1.22.3"
+  GO_VERSION: "~1.22.5"
 
 jobs:
-  Explore-GitHub-Actions:
+  build-release:
+    name: Build release
+    environment: prod
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
           check-latest: true
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-      - run: make ci
-        env:
-          CONFIG_RELEASE_GO_FILE: ${{ secrets.CONFIG_RELEASE_GO_FILE }}
+
+      - name: Use config_release.go from action secrets
+        uses: mobiledevops/secret-to-file-action@v1 # TODO native in Makefile, can be unsafe...
+        with:
+          base64-encoded-secret: ${{ secrets.CONFIG_RELEASE_GO_FILE }}
+          filename: "config_release.go"
+
+      - name: Use resources/ssh_private_key from action secrets
+        uses: mobiledevops/secret-to-file-action@v1 # TODO native in Makefile, can be unsafe...
+        with:
+          base64-encoded-secret: ${{ secrets.RESOURCES_SSH_PRIVATE_KEY }}
+          filename: "ssh_private_key"
+          working-directory: "./resources"
+
+      - run: make release
+
+      - name: Store release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-folder
+          path: |
+            dist
