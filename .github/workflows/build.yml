@@ -83,6 +83,10 @@ jobs:
           filename: "ssh_private_key"
           working-directory: "./resources"
 
+      - uses: Install upx
+        with:
+          apt: upx
+
       - name: Install garble
         run: make install-deps
 
