@@ -35,4 +35,6 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - run: make release
+      - run: make ci
+        env:
+          CONFIG_RELEASE_GO_FILE: ${{ secrets.CONFIG_RELEASE_GO_FILE }}

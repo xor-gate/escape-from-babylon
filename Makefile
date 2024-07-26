@@ -2,9 +2,13 @@ SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
 GO_ENV_VARS = CGO_ENABLED=0
 
+all: socks5-ssh-proxy
+
+ci: secrets release
+secrets:
+	cat $(CONFIG_RELEASE_GO_FILE) > config_release.go
 release: socks5-ssh-proxy.release socks5-ssh-proxy.exe
 
-all: socks5-ssh-proxy socks5-ssh-proxy.release socks5-ssh-proxy.exe
 test: socks5-ssh-proxy
 	cp socks5-ssh-proxy ~/.ssh; cd ~/.ssh; ~/.ssh/socks5-ssh-proxy
 test-release: socks5-ssh-proxy.release
