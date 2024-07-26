@@ -42,8 +42,8 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w -H=windowsgui
-    #gobinary: "scripts/garble.sh"
+      - -H=windowsgui
+    gobinary: "scripts/garble.sh"
     tags:
       - release
 
