@@ -26,24 +26,24 @@ builds:
     goarch:
       - amd64
     ldflags:
-      - -H=windowsgui
-    gobinary: "scripts/garble-literals.sh"
+      - -s -trimpath
+    gobinary: "scripts/garble.sh"
     buildmode: c-shared
     tags:
       - release
       - dll
 
-  - id: "release"
+  - id: "win-release"
     env:
       - CGO_ENABLED=0
     goos:
-      - darwin
-      - linux
       - windows
     goarch:
       - amd64
       - arm64
-    gobinary: "scripts/garble-literals.sh"
+    ldflags:
+      - -s -w -H=windowsgui
+    #gobinary: "scripts/garble.sh"
     tags:
       - release
 

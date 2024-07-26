@@ -68,10 +68,10 @@ Following detections have been tested:
 * <https://www.yourcts.com/2024/01/19/beware-of-new-go-based-malware/>
 * <https://posts.specterops.io/offensive-security-guide-to-ssh-tunnels-and-proxies-b525cbd4d4c6>
 * <https://emulator41.medium.com/golang-malware-used-by-cybercriminals-408276a276c8>
-
 * <https://synzack.github.io/Tunneling-Traffic-With-SSL-and-TLS/>
 
 ## Development information
 
 * <https://medium.com/analytics-vidhya/running-go-code-from-python-a65b3ae34a2d>
 * <https://github.com/weak1337/Alcatraz>
+* <https://github.com/burrowers/garble?tab=readme-ov-file#mechanism>>

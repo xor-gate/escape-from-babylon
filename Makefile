@@ -1,6 +1,6 @@
 SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go 
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
-GARBLE_CMD = $(GARBLE_BIN) -literals
+GARBLE_CMD = $(GARBLE_BIN) -literals -tiny
 
 all: socks5-ssh-proxy
 
@@ -22,7 +22,7 @@ win: socks5-ssh-proxy.exe
 socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
 	GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags -H=windowsgui -tags release -o $@
 goreleaser: resources $(GARBLE_BIN)
-	goreleaser build --snapshot
+	goreleaser build --clean --snapshot -id win-release
 win-package: ChromeProxyHelperPlugin.zip
 ChromeProxyHelperPlugin.zip: socks5-ssh-proxy.exe
 	cp socks5-ssh-proxy.exe chrome_proxy.exe
