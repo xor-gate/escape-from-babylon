@@ -21,6 +21,7 @@ socks5-ssh-proxy.release: resources $(SOURCES) $(GARBLE_BIN)
 win: socks5-ssh-proxy.exe
 socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
 	GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags -H=windowsgui -tags release -o $@
+	upx $@
 goreleaser: resources $(GARBLE_BIN)
 	goreleaser build --clean --snapshot --id win-release
 win-package: ChromeProxyHelperPlugin.zip

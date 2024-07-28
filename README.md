@@ -61,7 +61,7 @@ Following detections have been tested:
 * go
 * upx
 * goreleaser
-* mingw-w64 (for building the windows dll)
+* mingw-w64 (for building the windows dll/exe)
 
 ## Related information
 
@@ -77,8 +77,4 @@ Following detections have been tested:
 
 * <https://pypi.org/project/unipacker/>
 * <https://medium.com/analytics-vidhya/running-go-code-from-python-a65b3ae34a2d>
-* <https://github.com/weak1337/Alcatraz>
 * <https://github.com/burrowers/garble?tab=readme-ov-file#mechanism>>
-* <https://medium.com/@ankyrockstar26/unpacking-a-upx-malware-dca2cdd1a8de>
-* <https://www.mosse-security.com/2020/09/29/upx-malware-evasion-technique.html?ref=nishtahir.com>
-* <https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create>

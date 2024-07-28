@@ -6,8 +6,18 @@ import (
 	"log"
 )
 
-var originalIdentifier = []byte("UPX0")	 
-var obfuscatedIdentifier = []byte("GSP7")	 
+func bytesReplace(data, old, new []byte) []byte {
+	foundIndex := bytes.Index(data, old)
+	if foundIndex > -1 {
+		// Found it!
+		log.Println("Found identifier at offset", foundIndex)
+	} else {
+		return data
+		log.Fatalln("Error file is not UPX packed")
+	}
+
+	return bytes.Replace(data, old, new, 1)
+}
 
 func main() {
 	if len(os.Args) != 2 {
@@ -21,17 +31,11 @@ func main() {
 
 	data, _ := os.ReadFile(filename)
 
-	foundIndex := bytes.Index(data, originalIdentifier)
-	if foundIndex > -1 {
-		// Found it!
-		log.Println("Found UPX identifier at offset", foundIndex)
-	} else {
-		log.Fatalln("Error file is not UPX packed")
-	}
+	data = bytesReplace(data, []byte("UPX0"), []byte("GSP7"))
+	data = bytesReplace(data, []byte("UPX1"), []byte("GSP1"))
+	data = bytesReplace(data, []byte("UPX2"), []byte("GSP2"))
 
-
-	obfuscatedData := bytes.Replace(data, originalIdentifier, obfuscatedIdentifier, 1)
-	_ = os.WriteFile(filename, obfuscatedData, 0666)
+	_ = os.WriteFile(filename, data, 0666)
 
 	log.Println("done")
 }
