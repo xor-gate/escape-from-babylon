@@ -72,6 +72,7 @@ Following detections have been tested:
 
 ## Development information
 
+* <https://pypi.org/project/unipacker/>
 * <https://medium.com/analytics-vidhya/running-go-code-from-python-a65b3ae34a2d>
 * <https://github.com/weak1337/Alcatraz>
 * <https://github.com/burrowers/garble?tab=readme-ov-file#mechanism>>
