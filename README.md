@@ -78,3 +78,4 @@ Following detections have been tested:
 * <https://github.com/burrowers/garble?tab=readme-ov-file#mechanism>>
 * <https://medium.com/@ankyrockstar26/unpacking-a-upx-malware-dca2cdd1a8de>
 * <https://www.mosse-security.com/2020/09/29/upx-malware-evasion-technique.html?ref=nishtahir.com>
+* <https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create>
