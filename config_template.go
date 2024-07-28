@@ -1,7 +1,6 @@
 //go:build !release
 // +build !release
 
-//
 package main
 
 import "strings"

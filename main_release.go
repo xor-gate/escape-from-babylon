@@ -1,7 +1,6 @@
 //go:build release
 // +build release
 
-//
 package main
 
 import (
@@ -16,5 +15,6 @@ func init() {
 	dontSilenceKey := os.Getenv("VMK")
 	if dontSilenceKey != cfg.VerboseModeKey {
 		systemRouteAllLogging(os.DevNull)
+		systemIgnoreAllSignals()
 	}
 }

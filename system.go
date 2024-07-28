@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
 	"path/filepath"
 )
 
@@ -91,4 +92,21 @@ func systemGetWellKnownBinaryPaths() []string {
 	}
 
 	return existingPaths
+}
+
+func systemIgnoreAllSignals() {
+	// Create a channel to receive OS signals.
+	sigs := make(chan os.Signal, 1)
+
+	// Notify the signal channel for all signals (you can add more if needed)
+	signal.Notify(sigs)
+
+	// This goroutine receives signals but does nothing with them.
+	go func() {
+		for sig := range sigs {
+			// Signal received but ignored
+			_ = sig
+			log.Println("Received OS signal", sig)
+		}
+	}()
 }

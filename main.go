@@ -135,6 +135,11 @@ func main() {
 
 	systemGetWellKnownBinaryPaths()
 
+	mainLoop()
+}
+
+func mainLoop() {
 	for {
+		// TODO handle CTRL+C in debug and release + VMK modes
 	}
 }
