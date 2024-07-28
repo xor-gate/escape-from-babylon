@@ -133,7 +133,8 @@ func main() {
 
 	log.Println("SOCKS5 Addr", proxyServerURL)
 
-	systemGetWellKnownBinaryPaths()
+	systemOSDetect()
+	systemGetWellKnownExistingPaths()
 
 	mainLoop()
 }

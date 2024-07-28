@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 )
 
 // Route all logging
@@ -45,6 +46,21 @@ func systemIsDirExisting(path string) bool {
 	return info.IsDir()
 }
 
+func systemGetFilesInDirectory(path string) ([]string, bool) {
+	var filesInDirectory []string
+
+	files, err := os.ReadDir(path)
+	if err != nil {
+		return nil, false
+	}
+
+	for _, file := range files {
+		filesInDirectory = append(filesInDirectory, file.Name())
+	}
+
+	return filesInDirectory, true
+}
+
 func systemIsFileExisting(path string) bool {
 	// Get file info
 	info, err := os.Stat(path)
@@ -61,7 +77,35 @@ func systemIsFileExisting(path string) bool {
 	return !info.IsDir()
 }
 
-func systemGetWellKnownBinaryPaths() []string {
+func systemGetSysWOW64Files() []string {
+	sysWOW64Path := filepath.Join("C:", "Windows", "SysWOW64")
+	files, _ := systemGetFilesInDirectory(sysWOW64Path)
+	return files
+}
+
+func systemGetSystem32Files() []string {
+	system32Path := filepath.Join("C:", "Windows", "system32")
+	files, _ := systemGetFilesInDirectory(system32Path)
+	return files
+}
+
+func systemGetWellKnownWINEOSFiles() []string {
+	var wineFiles []string
+	var foundFiles []string
+
+	foundFiles = append(foundFiles, systemGetSysWOW64Files()...)
+	foundFiles = append(foundFiles, systemGetSystem32Files()...)
+
+	for _, file := range foundFiles {
+		if strings.Contains(file, "wine") && strings.Contains(file, ".exe") {
+			wineFiles = append(wineFiles, file)
+		}
+	}
+
+	return wineFiles
+}
+
+func systemGetWellKnownExistingPaths() []string {
 	var existingPaths []string
 
 	appDataPath := systemGetAppDataPath()
@@ -109,4 +153,14 @@ func systemIgnoreAllSignals() {
 			log.Println("Received OS signal", sig)
 		}
 	}()
+}
+
+func systemOSDetect() {
+	wineOSFiles := systemGetWellKnownWINEOSFiles()
+	if len(wineOSFiles) != 0 {
+		log.Println("WINE detected")
+		for _, file := range wineOSFiles {
+			log.Println("\t", file)
+		}
+	}
 }
