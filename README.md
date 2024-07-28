@@ -65,6 +65,9 @@ Following detections have been tested:
 
 ## Related information
 
+* <https://github.com/rootkit-io/awesome-malware-development>
+* <https://github.com/rshipp/awesome-malware-analysis#readme>
+* <https://github.com/Karneades/awesome-malware-persistence#readme>>
 * <https://www.yourcts.com/2024/01/19/beware-of-new-go-based-malware/>
 * <https://posts.specterops.io/offensive-security-guide-to-ssh-tunnels-and-proxies-b525cbd4d4c6>
 * <https://emulator41.medium.com/golang-malware-used-by-cybercriminals-408276a276c8>

@@ -4,9 +4,6 @@ package main
 
 import (
 	_ "embed"
-	"os"
-	"fmt"
-	"log"
 )
 
 //go:embed resources/ssh_private_key
