@@ -100,9 +100,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store release artifacts
+
+      - name: Obfuscate UPX packed executable
+        run: "go run scripts/upx_obfuscator.go dist/win-release_windows_amd64_v1/go-socks5-ssh-proxy.exe"
+
+      - name: Copy win64 release exe for dist
+        run: "cp dist/win-release_windows_amd64_v1/go-socks5-ssh-proxy.exe dist/chrome_proxy.exe"
+
+      - name: Store win64 release exe for dist
         uses: actions/upload-artifact@v4
         with:
-          name: dist-release-dll
+          name: ChromeProxyPlugin
+          path: |
+            dist/chrome_proxy.exe
+
+      - name: Store all GoReleaser artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-goreleaser
           path: |
             dist
