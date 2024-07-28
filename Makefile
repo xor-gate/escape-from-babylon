@@ -1,4 +1,4 @@
-SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go 
+SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go system.go
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
 GARBLE_CMD = $(GARBLE_BIN) -literals -tiny
 
@@ -57,6 +57,9 @@ resources/ssh_private_key:
 	@echo "====================================="
 resources/ssh_private_key.base64: resources/ssh_private_key
 	base64 -i $< -o $@
+
+fmt:
+	gofmt -w *.go
 
 secrets: config_release.go.base64 resources/ssh_private_key.base64
 

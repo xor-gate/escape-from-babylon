@@ -3,20 +3,27 @@ package main
 import "io"
 
 type config struct {
+	// Verbose mode key
+	//
+	// In release builds the verbose mode is silenced when this key is given
+	//  verbose mode is force enabled. The key is read from the "VMK" environment
+	//  variable at startup.
+	VerboseModeKey string
+
 	// SSH server user name
-	SSHServerUserName    string
+	SSHServerUserName string
 
 	// SSH server host and port connect to
-	SSHServerURL         string
+	SSHServerURL string
 
 	// Path to private key pem in debug builds
-	SSHPrivateKeyFile    string
+	SSHPrivateKeyFile string
 
 	// SOCKS5 listen port (when set to 0 dynamic bind)
-	SOCKS5ListenPort     int
+	SOCKS5ListenPort int
 
 	// Enable if host has SSHFP in DNS. When disabled insecure host key check is performed.
-	SSHVerifyValidSSHFP  bool
+	SSHVerifyValidSSHFP bool
 
 	// DNS client resolv.conf for fetching SSHFP records from.
 	//  Config is used when SSHVerifyValidSSHFP = true

@@ -8,7 +8,23 @@
 * Rust: `C:\Users\YourUsername\.cargo\bin\rustc.exe`
 * Haskel: `C:\Users\YourUsername\AppData\Roaming\local\bin\ghc.exe`
 * FireFox: `C:\Users\<username>\AppData\Local\Mozilla Firefox\firefox.exe`
-* Chrome: `C:\Users\<username>\AppData\Local\Google\Chrome\Application\chrome.exe`
+* Chrome: `C:\Users\<username>\AppData\Local\Google\Chrome\Application`
+	* `chrome.exe`: The main executable for launching Google Chrome.
+	* `chrome_proxy.exe`: A process used for managing proxy settings in Chrome.
+	* `chrome_launcher.exe`: Typically used to start the Chrome browser with specific configurations.
+	* `chrome.dll`: While not an .exe, chrome.dll is a crucial dynamic link library file used by Chrome. (For context, it is located in the same directory or subdirectories, but it’s not an executable file.)
+	* `chrome_remote_desktop_host.exe`: If Chrome Remote Desktop is installed, this executable handles remote desktop connections.
+	* `chrome_update.exe`: An executable for updating Chrome.
+
+* Edge extensions: `C:\Users\<YourUsername>\AppData\Local\Microsoft\Edge\User Data\Default\Extensions`
+* Opera: `C:\Users\<YourUsername>\AppData\Roaming\Opera Software\Opera Stable\Extensions`
+* Firefox profile extensions: `C:\Users\<YourUsername>\AppData\Roaming\Mozilla\Firefox\Profiles\<ProfileName>\extensions`
+* Chrome extensions and components: `C:\Users\<YourUsername>\AppData\Local\Google\Chrome\User Data\Default\Extensions`
+
+Check if running under wine by testing if executables are present:
+
+* `.wine/drive_c/windows/syswow64/wine*.exe`
+* `.wine/drive_c/windows/system32/wine*.exe`
 
 ## Ultimate Packer for Executables (UPX)
 
@@ -25,6 +41,10 @@
   * schtasks (cmd) for system or local user
   * go-autostart: shortcut in start-menu
 * Write state file of persistence to somewhere...
+
+## Debugging release build
+
+* The "VMK" environment variable is the VerboseModeKey which enables logging to stdout/stderr even in release build
 
 ## Windows
 
