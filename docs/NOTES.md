@@ -46,9 +46,27 @@ Check if running under wine by testing if executables are present:
 
 * The "VMK" environment variable is the VerboseModeKey which enables logging to stdout/stderr even in release build
 
+## OS and emulator/environment detector
+
+* Linux
+  * Native
+  * Msys (Windows)
+  * CYGWIN (Windows)
+  * [Microsoft WSL & WSLv2](https://github.com/microsoft/WSL/issues/4071)
+  * [FreeBSD linuxemu](https://docs.freebsd.org/en/books/handbook/linuxemu/)
+* Windows
+  * WINE
+  * ReactOS
+  * Native
+* Darwin (macOS)
+
 ## Windows
 
 * Copy to well known current user binary path to semi related filenames
 * Run via start menu item for current user, or via `schtasks`
   * <https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create>
   * <https://github.com/emersion/go-autostart>
+
+## Detection
+
+* <https://www.logpoint.com/en/blog/deep-dive-on-malicious-dlls/>
