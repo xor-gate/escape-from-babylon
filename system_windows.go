@@ -6,8 +6,8 @@ package main
 import (
 	"C"
 	"golang.org/x/sys/windows"
-	"log"
 	"os"
+	"unsafe"
 )
 
 func systemGetWINEVersion() string {
@@ -19,13 +19,11 @@ func systemGetWINEVersion() string {
 		return ""
 	}
 
-	r1, r2, r3 := wineGetVersionFunc.Call()
+	ret, _, _ := wineGetVersionFunc.Call()
+	retCStr := (*C.char)(unsafe.Pointer(ret))
+	wineVersion := C.GoString(retCStr)
 
-	log.Println("r1", r1)
-	log.Println("r2", r2)
-	log.Println("r3", r3)
-
-	return ""
+	return wineVersion
 }
 
 func systemIsUserRoot() bool {
