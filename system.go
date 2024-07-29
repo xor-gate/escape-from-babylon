@@ -156,6 +156,8 @@ func systemIgnoreAllSignals() {
 }
 
 func systemOSDetect() {
+	systemGetUname()
+
 	wineVersion := systemGetWINEVersion()
 	log.Println("WINE version", wineVersion)
 	log.Println("IsUserRoot", systemIsUserRoot())

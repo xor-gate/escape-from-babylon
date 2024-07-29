@@ -1,4 +1,4 @@
-SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go system.go system_windows.go system_unix.go
+SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go system.go system_windows.go system_linux.go system_darwin.go
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
 GARBLE_CMD = $(GARBLE_BIN) -literals -tiny
 
@@ -14,7 +14,7 @@ test: socks5-ssh-proxy
 test-release: socks5-ssh-proxy.release
 	./socks5-ssh-proxy.release
 socks5-ssh-proxy: $(SOURCES) 
-	go build -o $@
+	GOOS=linux GOARCH=amd64 go build -tags release,linux -o $@
 socks5-ssh-proxy.release: resources $(SOURCES) $(GARBLE_BIN)
 	GOOS=darwin GOARCH=amd64 $(GARBLE_CMD) build -tags release -o $@
 	upx $@

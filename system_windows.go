@@ -26,6 +26,9 @@ func systemGetWINEVersion() string {
 	return wineVersion
 }
 
+func systemGetUname() {
+}
+
 func systemIsUserRoot() bool {
 	root := true
 
