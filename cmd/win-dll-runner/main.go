@@ -5,7 +5,6 @@ package main
 
 import (
 	"golang.org/x/sys/windows"
-	"os"
 )
 
 func runMainFromDLL() {
@@ -17,7 +16,7 @@ func runMainFromDLL() {
 		return
 	}
 
-	_, _, _ := runMainFunc.Call()
+	_, _, _ = runMainFunc.Call()
 }
 
 func main() {

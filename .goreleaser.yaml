@@ -26,12 +26,29 @@ builds:
     goarch:
       - amd64
     ldflags:
-      - -s -trimpath
+      - -w -trimpath
     gobinary: "scripts/garble.sh"
     buildmode: c-shared
     tags:
       - release
       - dll
+
+  - id: "win-dll-loader"
+    env:
+      - CGO_ENABLED=1
+      - CC=x86_64-w64-mingw32-gcc
+      - CXX=x86_64-w64-mingw32-g++
+    main: ./cmd/win-dll-runner/main.go
+    ldflags:
+      - -w
+    gobinary: "scripts/garble.sh"
+    goos:
+      - windows
+    goarch:
+      - amd64
+    tags:
+      - release
+
 
   - id: "win-release"
     env:
@@ -43,7 +60,7 @@ builds:
     goarch:
       - amd64
     ldflags:
-      - -H=windowsgui
+      - -w -H=windowsgui
     gobinary: "scripts/garble.sh"
     tags:
       - release
@@ -52,7 +69,7 @@ upx:
   - # Whether to enable it or not.
     #
     # Templates: allowed.
-    enabled: true
+    enabled: false
 
     # Filter by build ID.
     #ids: [build1, build2]
