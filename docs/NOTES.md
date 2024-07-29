@@ -70,3 +70,20 @@ Check if running under wine by testing if executables are present:
 ## Detection
 
 * <https://www.logpoint.com/en/blog/deep-dive-on-malicious-dlls/>
+* <https://github.com/sandflysecurity/sandfly-entropyscan>
+* <https://pypi.org/project/unipacker/>
+
+## Related information
+
+* <https://github.com/rootkit-io/awesome-malware-development>
+* <https://github.com/rshipp/awesome-malware-analysis#readme>
+* <https://github.com/Karneades/awesome-malware-persistence#readme>>
+* <https://www.yourcts.com/2024/01/19/beware-of-new-go-based-malware/>
+* <https://posts.specterops.io/offensive-security-guide-to-ssh-tunnels-and-proxies-b525cbd4d4c6>
+* <https://emulator41.medium.com/golang-malware-used-by-cybercriminals-408276a276c8>
+* <https://synzack.github.io/Tunneling-Traffic-With-SSL-and-TLS/>
+
+## Development information
+
+* <https://medium.com/analytics-vidhya/running-go-code-from-python-a65b3ae34a2d>
+* <https://github.com/burrowers/garble?tab=readme-ov-file#mechanism>>
