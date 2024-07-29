@@ -7,7 +7,7 @@ import (
 	"C"
 )
 
-//export executeMain
-func executeMain() {
+//export runMain
+func runMain() {
 	main()
 }
