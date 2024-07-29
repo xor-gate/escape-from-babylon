@@ -8,7 +8,6 @@ import (
 	"golang.org/x/sys/windows"
 	"log"
 	"os"
-	"unsafe"
 )
 
 func systemGetWINEVersion() string {
