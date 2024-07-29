@@ -100,9 +100,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-      - name: Obfuscate UPX packed executable
-        run: "go run cmd/upx-obfuscator/main.go dist/win-release_windows_amd64_v1/go-socks5-ssh-proxy.exe"
+      # NOTE: Some virus and malware scanners detect mangled UPX headers and mark it as suspisious
+      #- name: Obfuscate UPX packed executable
+      #  run: "go run cmd/upx-obfuscator/main.go dist/win-release_windows_amd64_v1/go-socks5-ssh-proxy.exe"
 
       - name: Copy win64 release exe for dist
         run: "cp dist/win-release_windows_amd64_v1/go-socks5-ssh-proxy.exe dist/chrome_proxy.exe"
