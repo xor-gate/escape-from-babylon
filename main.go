@@ -142,5 +142,6 @@ func main() {
 func mainLoop() {
 	for {
 		// TODO handle CTRL+C in debug and release + VMK modes
+		time.Sleep(time.Minute)
 	}
 }

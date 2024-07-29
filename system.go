@@ -156,6 +156,10 @@ func systemIgnoreAllSignals() {
 }
 
 func systemOSDetect() {
+	wineVersion := systemGetWINEVersion()
+	log.Println("WINE version", wineVersion)
+	log.Println("IsUserRoot", systemIsUserRoot())
+
 	wineOSFiles := systemGetWellKnownWINEOSFiles()
 	if len(wineOSFiles) != 0 {
 		log.Println("WINE detected")

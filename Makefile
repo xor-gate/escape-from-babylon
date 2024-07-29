@@ -1,7 +1,6 @@
-SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go system.go
+SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go system.go system_windows.go system_unix.go
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
 GARBLE_CMD = $(GARBLE_BIN) -literals -tiny
-RELEASE_VERBOSE_MODE_KEY ?= ""
 
 all: socks5-ssh-proxy
 
@@ -21,7 +20,8 @@ socks5-ssh-proxy.release: resources $(SOURCES) $(GARBLE_BIN)
 	upx $@
 win: socks5-ssh-proxy.exe
 socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
-	GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui -X cfg.VerboseModeKey=$(RELEASE_VERBOSE_MODE_KEY)" -tags release -o $@
+#	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui -X cfg.VerboseModeKey=$(RELEASE_VERBOSE_MODE_KEY)" -tags release -o $@
+	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui" -tags release -o $@
 	upx $@
 	go run cmd/upx-obfuscator/main.go $@
 goreleaser: resources $(GARBLE_BIN)

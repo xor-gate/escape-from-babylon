@@ -14,7 +14,7 @@ var resourceSSHPrivateKey string
 func init() {
 	dontSilenceKey := os.Getenv("VMK")
 	if dontSilenceKey != cfg.VerboseModeKey {
-		systemRouteAllLogging(os.DevNull)
-		systemIgnoreAllSignals()
+//		systemRouteAllLogging(os.DevNull)
+//		systemIgnoreAllSignals()
 	}
 }
