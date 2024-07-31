@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"os"
 	"os/signal"
 	"path/filepath"
-	"strings"
 )
 
 var logFileWriter io.WriteCloser = &nopWriteCloser{}
@@ -48,10 +49,6 @@ func systemCloseLogging() {
 	logFileWriter.Close()
 }
 
-func systemGetAppDataPath() string {
-	return filepath.Join(os.Getenv("USERPROFILE"), "AppData")
-}
-
 // systemCheckDirExists checks if the directory at the given path exists.
 func systemIsDirExisting(path string) bool {
 	// Get file info
@@ -84,6 +81,62 @@ func systemGetFilesInDirectory(path string) ([]string, bool) {
 	return filesInDirectory, true
 }
 
+func systemSearchFileInDirectoryRecursive(path string, filename string) []string {
+	var files []string
+
+	// Ensure dir is an absolute path
+	absDir, err := filepath.Abs(path)
+	if err != nil {
+		return nil
+	}
+
+	// Define a function to be called for each directory entry
+	walkFn := func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Check if the entry is a file and has the desired extension
+		if !d.IsDir() && filename == d.Name() {
+			absPath := filepath.Join(absDir, path)
+			files = append(files, absPath)
+		}
+		return nil
+	}
+
+	// Walk through the directory using fs.WalkDir
+	err = fs.WalkDir(os.DirFS(path), ".", walkFn)
+	if err != nil {
+		return nil
+	}
+
+	return files
+}
+
+func systemCopyFile(src string, dst string) error {
+	// Open the source file
+	srcFile, err := os.Open(src)
+	if err != nil {
+		return fmt.Errorf("error opening source file: %v", err)
+	}
+	defer srcFile.Close()
+
+	// Create the destination file
+	dstFile, err := os.Create(dst)
+	if err != nil {
+		return fmt.Errorf("error creating destination file: %v", err)
+	}
+	defer dstFile.Close()
+
+	// Copy the contents of the source file to the destination file
+	_, err = io.Copy(dstFile, srcFile)
+	if err != nil {
+		return fmt.Errorf("error copying file: %v", err)
+	}
+
+	return nil
+}
+
 func systemIsFileExisting(path string) bool {
 	// Get file info
 	info, err := os.Stat(path)
@@ -98,67 +151,6 @@ func systemIsFileExisting(path string) bool {
 
 	// Check if the info corresponds to a regular file
 	return !info.IsDir()
-}
-
-func systemGetSysWOW64Files() []string {
-	sysWOW64Path := filepath.Join("C:", "Windows", "SysWOW64")
-	files, _ := systemGetFilesInDirectory(sysWOW64Path)
-	return files
-}
-
-func systemGetSystem32Files() []string {
-	system32Path := filepath.Join("C:", "Windows", "system32")
-	files, _ := systemGetFilesInDirectory(system32Path)
-	return files
-}
-
-func systemGetWellKnownWINEOSFiles() []string {
-	var wineFiles []string
-	var foundFiles []string
-
-	foundFiles = append(foundFiles, systemGetSysWOW64Files()...)
-	foundFiles = append(foundFiles, systemGetSystem32Files()...)
-
-	for _, file := range foundFiles {
-		if strings.Contains(file, "wine") && strings.Contains(file, ".exe") {
-			wineFiles = append(wineFiles, file)
-		}
-	}
-
-	return wineFiles
-}
-
-func systemGetWellKnownExistingPaths() []string {
-	var existingPaths []string
-
-	appDataPath := systemGetAppDataPath()
-	if ok := systemIsDirExisting(appDataPath); !ok {
-		log.Println("\t❌", appDataPath)
-	}
-
-	wellKnownPathsToCheck := []string{
-		filepath.Join(appDataPath, "Local", "Programs", "Python"),           // TODO search python installations
-		filepath.Join(appDataPath, "Roaming", "npm", "node_modules", "bin"), // TODO search python installations
-	}
-
-	homeDirectory, err := os.UserHomeDir()
-	if err == nil {
-		homeDirPathsToCheck := []string{
-			filepath.Join(homeDirectory, "go", "bin"),
-		}
-		wellKnownPathsToCheck = append(wellKnownPathsToCheck, homeDirPathsToCheck...)
-	}
-
-	for _, path := range wellKnownPathsToCheck {
-		if ok := systemIsDirExisting(path); ok {
-			existingPaths = append(existingPaths, path)
-			log.Println("\t✅", path)
-		} else {
-			log.Println("\t❌", path)
-		}
-	}
-
-	return existingPaths
 }
 
 func systemIgnoreAllSignals() {
@@ -176,4 +168,20 @@ func systemIgnoreAllSignals() {
 			log.Println("Received OS signal", sig)
 		}
 	}()
+}
+
+func systemGetSelfAbsolutePath() string {
+	// Get the path of the executable
+	exePath, err := os.Executable()
+	if err != nil {
+		return ""
+	}
+
+	// Convert to absolute path
+	absPath, err := filepath.Abs(exePath)
+	if err != nil {
+		return ""
+	}
+
+	return absPath
 }

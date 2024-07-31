@@ -40,6 +40,10 @@ func int8SliceToString(int8Slice []int8) string {
 	return string(byteSlice)
 }
 
+func systemGetWellKnownExistingPaths() []string {
+	return nil
+}
+
 func systemIsUserRoot() bool {
 	return false
 }

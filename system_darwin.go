@@ -5,3 +5,7 @@ package main
 
 func systemOSDetect() {
 }
+
+func systemGetWellKnownExistingPaths() []string {
+	return nil
+}

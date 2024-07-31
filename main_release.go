@@ -116,5 +116,5 @@ func init() {
 		}
 	}
 
-	systemRouteAllLogging(logFile)
+	//systemRouteAllLogging(logFile)
 }

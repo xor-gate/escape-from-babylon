@@ -5,6 +5,7 @@ go 1.22.4
 require (
 	github.com/awnumar/memguard v0.22.5
 	github.com/cloudfoundry/socks5-proxy v0.2.120
+	github.com/emersion/go-autostart v0.0.0-20210130080809-00ed301c8e9a
 	github.com/xor-gate/sshfp v0.0.0-20200411085609-13942eb67330
 	golang.org/x/crypto v0.25.0
 	golang.org/x/sys v0.22.0
