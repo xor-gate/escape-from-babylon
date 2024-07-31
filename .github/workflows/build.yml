@@ -101,7 +101,7 @@ jobs:
           distribution: goreleaser
           # 'latest', 'nightly', or a semver
           version: '~> v2'
-          args: release --clean --snapshot
+          args: release --clean --snapshot --id win-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
