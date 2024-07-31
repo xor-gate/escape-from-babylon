@@ -101,7 +101,8 @@ func main() {
 	var signer ssh.Signer
 	var privateKey string
 
-	defer secureEraseResourceSSHPrivateKey()
+	defer systemCloseLogging()
+	defer resourcesPurge()
 
 	dnsServers := sshfp.WithDNSClientConfigFromReader(cfg.DNSServersResolvConf)
 
@@ -134,6 +135,8 @@ func main() {
 	}
 
 	time.Sleep(time.Second)
+
+	resourceSSHPrivateKeyDestroy()
 
 	proxyServerURL, err := sshSocks5Proxy.Addr()
 	if err != nil {

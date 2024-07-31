@@ -1,28 +1,51 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"io"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"strings"
 )
 
+var logFileWriter io.WriteCloser = &nopWriteCloser{}
+
+// nopWriteCloser is a struct that implements io.WriteCloser interface.
+type nopWriteCloser struct {
+}
+
+// Write method for nopWriteCloser.
+func (d *nopWriteCloser) Write(p []byte) (n int, err error) {
+	// Simply return the length of p and no error, simulating a successful write.
+	return len(p), nil
+}
+
+// Close method for nopWriteCloser.
+func (d *nopWriteCloser) Close() error {
+	// Return nil to simulate a successful close.
+	return nil
+}
+
 // Route all logging
 func systemRouteAllLogging(logfile string) {
-	nullFile, err := os.OpenFile(logfile, os.O_WRONLY, 0666)
+	logFileHandle, err := os.OpenFile(logfile, os.O_WRONLY, 0666)
 	if err != nil {
-		fmt.Println("Error opening /dev/null:", err)
 		return
 	}
 
-	// Redirect stdout and stderr to /dev/null
-	os.Stdout = nullFile
-	os.Stderr = nullFile
+	logFileWriter = logFileHandle
+
+	// Redirect stdout and stderr to logFileWriter
+	os.Stdout = logFileHandle
+	os.Stderr = logFileHandle
 
 	// Redirect log facility to /dev/null
-	log.SetOutput(nullFile)
+	log.SetOutput(logFileHandle)
+}
+
+func systemCloseLogging() {
+	logFileWriter.Close()
 }
 
 func systemGetAppDataPath() string {
