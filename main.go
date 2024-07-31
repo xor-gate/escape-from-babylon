@@ -16,9 +16,9 @@ var sshfpResolver *sshfp.Resolver
 
 func secureEraseResourceSSHPrivateKey() {
 	log.Println("ERASING SSH private key")
-	for i := range resourceSSHPrivateKey {
-		resourceSSHPrivateKey[i] = 0
-	}
+//	for i := range resourceSSHPrivateKey {
+//		resourceSSHPrivateKey[i] = 0
+//	}
 }
 
 type SSHHostPublicKeyFetcher struct {
