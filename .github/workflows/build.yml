@@ -42,7 +42,12 @@ jobs:
           filename: "ssh_private_key.base64.rot13"
           working-directory: "./resources"
 
-      - run: make release
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+
+      - run: make win
 
       - name: Store release artifacts
         uses: actions/upload-artifact@v4
