@@ -22,6 +22,7 @@ socks5-ssh-proxy.release: resources $(SOURCES) $(GARBLE_BIN)
 	upx $@
 win: dist/chrome_proxy.exe
 dist/chrome_proxy.exe: socks5-ssh-proxy.exe
+	mkdir dist
 	cp -v $< $@
 socks5-ssh-proxy.exe: resources $(GOVERSIONINFO_BIN) $(SOURCES)
 	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go generate -tags windows,release
