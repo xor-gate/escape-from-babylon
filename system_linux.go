@@ -5,8 +5,8 @@ package main
 
 import (
 	"log"
-	"syscall"
 	"strings"
+	"syscall"
 )
 
 func systemGetWINEVersion() string {

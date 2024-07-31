@@ -19,18 +19,16 @@
         "FileSubType": "00"
     },
     "StringFileInfo": {
-        "CompanyName": "Google LLC",
-        "FileDescription": "Google Chrome",
-        "FileVersion": "127.0.6533.73",
-        "InternalName": "chrome_proxy",
-        "LegalCopyright": "Copyright 2024 Google LLC. All rights reserved.",
-        "OriginalFilename": "chrome_proxy.exe",
-        "ProductName": "Google Chrome",
-        "ProductVersion": "127.0.6533.73",
-        "CompanyShortName": "Google",
-        "ProductShortName": "Chrome",
-        "LastChange": "b59f345ebd6c6bd0b5eb2a715334e912b514773d-refs/branch-heads/6533@{#1761}",
-        "Official Build": "1"
+        "CompanyName": "",
+        "FileDescription": "",
+        "FileVersion": "",
+        "InternalName": "",
+        "LegalCopyright": "",
+        "OriginalFilename": "",
+        "ProductName": "",
+        "ProductVersion": "",
+        "CompanyShortName": "",
+        "ProductShortName": ""
     },
     "VarFileInfo": {
         "Translation": {

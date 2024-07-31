@@ -9,7 +9,8 @@ type config struct {
 	//  verbose mode is force enabled. The key is read from the "VMK" environment
 	//  variable at startup.
 	//
-	// NOTE: This could be the sha256sum hex encoded string of the SSHPrivateKeyFile
+	// When not set during build, in release mode the SHA256-hex fingerprint is
+	//  derived from the PEM SSH private key.
 	VerboseModeKey string
 
 	// SSH server user name

@@ -74,6 +74,8 @@ resources/ssh_private_key.base64.rot13: resources/ssh_private_key.base64
 resources/ssh_private_key.base64.rot13.github: resources/ssh_private_key.base64.rot13
 	base64 -i $< -o $@ 
 
+vmk: resources/ssh_private_key
+	shasum -a 256 $<
 fmt:
 	gofmt -w *.go
 

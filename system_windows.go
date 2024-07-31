@@ -1,6 +1,7 @@
 //go:build windows
-//go:generate goversioninfo -manifest=resources/chrome_proxy.exe.manifest -64
 // +build windows
+
+//go:generate goversioninfo -manifest=resources/chrome_proxy.exe.manifest -64
 
 package main
 

