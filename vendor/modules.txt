@@ -43,3 +43,4 @@ golang.org/x/net/ipv6
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+golang.org/x/sys/windows/registry

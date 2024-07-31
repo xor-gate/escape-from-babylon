@@ -14,13 +14,6 @@ import (
 var fetchedSSHHostPublicKey SSHHostPublicKeyFetcher
 var sshfpResolver *sshfp.Resolver
 
-func secureEraseResourceSSHPrivateKey() {
-	log.Println("ERASING SSH private key")
-	//	for i := range resourceSSHPrivateKey {
-	//		resourceSSHPrivateKey[i] = 0
-	//	}
-}
-
 type SSHHostPublicKeyFetcher struct {
 	ssh.PublicKey
 }
@@ -142,8 +135,6 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
-
-	secureEraseResourceSSHPrivateKey()
 
 	log.Println("SOCKS5 Addr", proxyServerURL)
 

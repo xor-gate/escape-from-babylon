@@ -3,13 +3,5 @@
 
 package main
 
-func systemGetWINEVersion() string {
-	return ""
-}
-
-func systemGetUname() {
-}
-
-func systemIsUserRoot() bool {
-	return false
+func systemOSDetect() {
 }

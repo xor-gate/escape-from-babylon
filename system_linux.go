@@ -9,10 +9,6 @@ import (
 	"syscall"
 )
 
-func systemGetWINEVersion() string {
-	return ""
-}
-
 func systemGetUname() {
 	var uts syscall.Utsname
 
@@ -46,4 +42,8 @@ func int8SliceToString(int8Slice []int8) string {
 
 func systemIsUserRoot() bool {
 	return false
+}
+
+func systemOSDetect() {
+	systemGetUname()
 }
