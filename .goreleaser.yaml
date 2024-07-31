@@ -60,10 +60,11 @@ builds:
     goarch:
       - amd64
     ldflags:
-      - -w -H=windowsgui
+      - "-H=windowsgui"
     gobinary: "scripts/garble.sh"
     tags:
       - release
+      - windows
 
 upx:
   - # Whether to enable it or not.

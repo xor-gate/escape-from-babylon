@@ -82,6 +82,7 @@ Check if running under wine by testing if executables are present:
 * <https://posts.specterops.io/offensive-security-guide-to-ssh-tunnels-and-proxies-b525cbd4d4c6>
 * <https://emulator41.medium.com/golang-malware-used-by-cybercriminals-408276a276c8>
 * <https://synzack.github.io/Tunneling-Traffic-With-SSL-and-TLS/>
+* <https://www.trisul.org/blog/traffic-analysis-of-secure-shell-ssh/>
 
 ## Development information
 
