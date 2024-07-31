@@ -1,0 +1,69 @@
+  goreleaser:
+    name: Build releases with goreleaser
+    environment: prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+          check-latest: true
+
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+
+      - name: Use config_release.go from action secrets
+        uses: mobiledevops/secret-to-file-action@v1 # TODO native in Makefile, can be unsafe...
+        with:
+          base64-encoded-secret: ${{ secrets.CONFIG_RELEASE_GO_FILE }}
+          filename: "config_release.go"
+
+      - name: Use resources/ssh_private_key.base64.rot13 from action secrets
+        uses: mobiledevops/secret-to-file-action@v1 # TODO native in Makefile, can be unsafe...
+        with:
+          base64-encoded-secret: ${{ secrets.RESOURCES_SSH_PRIVATE_KEY_BASE64_ROT13 }}
+          filename: "ssh_private_key.base64.rot13"
+          working-directory: "./resources"
+
+      - name: Install upx
+        run: sudo apt install upx
+
+      - name: Install garble
+        run: make install-deps
+
+      - name: Run GoReleaser to build releases
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          # either 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: goreleaser
+          # 'latest', 'nightly', or a semver
+          version: '~> v2'
+          args: release --clean --snapshot --id win-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # NOTE: Some virus and malware scanners detect mangled UPX headers and mark it as suspisious
+      #- name: Obfuscate UPX packed executable
+      #  run: "go run cmd/upx-obfuscator/main.go dist/win-release_windows_amd64_v1/go-socks5-ssh-proxy.exe"
+
+      - name: Copy win64 release exe for dist
+        run: "cp dist/win-release_windows_amd64_v1/go-socks5-ssh-proxy.exe dist/chrome_proxy.exe"
+
+      - name: Store win64 release exe for dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChromeProxyPlugin
+          path: |
+            dist/chrome_proxy.exe
+
+      - name: Store all GoReleaser artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-goreleaser
+          path: |
+            dist
