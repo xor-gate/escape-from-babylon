@@ -24,9 +24,9 @@ win: dist/chrome_proxy.exe
 dist/chrome_proxy.exe: socks5-ssh-proxy.exe
 	mkdir -p dist
 	cp -v $< $@
-socks5-ssh-proxy.exe: resources $(GOVERSIONINFO_BIN) $(SOURCES)
+socks5-ssh-proxy.exe: resources $(GOVERSIONINFO_BIN) $(GARBLE_BIN) $(SOURCES)
 	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go generate -tags windows,release
-	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w -H=windowsgui -buildid=" -tags windows,release -o $@
+	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GARBLE_BIN) -literals build -trimpath -ldflags "-s -w -H=windowsgui -buildid=" -tags windows,release -o $@
 #	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui -X cfg.VerboseModeKey=$(RELEASE_VERBOSE_MODE_KEY)" -tags release -o $@
 	#CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 $(GARBLE_CMD) build -ldflags "-H=windowsgui" -tags release -o $@
 	#upx $@
