@@ -33,12 +33,13 @@ goreleaser: resources $(GARBLE_BIN)
 	goreleaser build --verbose --clean --snapshot --id win-release
 win-package: dist/ChromeProxyHelperPlugin.zip
 dist/ChromeProxyHelperPlugin.zip: dist/chrome_proxy.exe
-	zip -eP resistanceIsFutile $@ dist/chrome_proxy.exe
+	file $<
+	ls -lh $<
+	zip -eP resistanceIsFutile $@ $< 
 dist/chrome_proxy.exe: dist/socks5-ssh-proxy.tiny.exe
 	cp -v $< $@
 	upx --lzma --ultra-brute --best $@
 	go run cmd/upx-obfuscator/main.go $@
-	file $@
 install-deps: $(GARBLE_BIN) $(GOVERSIONINFO_BIN)
 $(GARBLE_BIN):
 	go install mvdan.cc/garble@v0.12.1
