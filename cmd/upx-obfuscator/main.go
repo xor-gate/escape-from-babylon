@@ -4,6 +4,7 @@ import (
 	"os"
 	"bytes"
 	"log"
+	"fmt"
 )
 
 func bytesReplace(data, old, new []byte) []byte {
@@ -13,7 +14,6 @@ func bytesReplace(data, old, new []byte) []byte {
 		log.Println("Found identifier at offset", foundIndex)
 	} else {
 		return data
-		log.Fatalln("Error file is not UPX packed")
 	}
 
 	return bytes.Replace(data, old, new, 1)
@@ -31,9 +31,11 @@ func main() {
 
 	data, _ := os.ReadFile(filename)
 
-	data = bytesReplace(data, []byte("UPX0"), []byte("GSP7"))
-	data = bytesReplace(data, []byte("UPX1"), []byte("GSP1"))
-	data = bytesReplace(data, []byte("UPX2"), []byte("GSP2"))
+	for i := range(10) {
+		upxIdentifier := fmt.Sprintf("UPX%d", i)
+		efbIdentifier := fmt.Sprintf("EFB%d", i)
+		data = bytesReplace(data, []byte(upxIdentifier), []byte(efbIdentifier))
+	}
 
 	_ = os.WriteFile(filename, data, 0666)
 

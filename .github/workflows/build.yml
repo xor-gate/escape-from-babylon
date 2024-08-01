@@ -48,6 +48,7 @@ jobs:
           platform: x64
 
       - run: make win
+      - run: make win-package
 
       - name: Store release artifacts
         uses: actions/upload-artifact@v4
