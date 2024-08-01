@@ -73,6 +73,11 @@ Check if running under wine by testing if executables are present:
 * <https://github.com/sandflysecurity/sandfly-entropyscan>
 * <https://pypi.org/project/unipacker/>
 
+**Online scanners**
+
+* <https://www.filescan.io/>
+* <https://virusscan.jotti.org/>
+
 ## Related information
 
 * <https://github.com/rootkit-io/awesome-malware-development>
