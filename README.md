@@ -2,6 +2,9 @@
 
 If HTTP(s) is filtered and outbound SSH is allowed, just create a SOCKS5 proxy over SSH using a [Jump server](https://en.wikipedia.org/wiki/Jump_server). Beat the (corporate) sensorship, and be free!
 
+> [!CAUTION]
+> Project has been archived because Palo Alto Networks, Inc. - Cortex [XDR](https://en.wikipedia.org/wiki/Extended_detection_and_response) marks it almost always as Suspicious, removes it or analyses it during runtime. Research case closed, back to WSL binaries then.
+
 ## Background information
 
 The proxy can use [SSHFP DNS record](https://en.wikipedia.org/wiki/SSHFP_record) verification for extra protection so the SSH host public key is side-channel checked.
