@@ -35,7 +35,7 @@ dist/ChromeProxyHelperPlugin.zip: dist/chrome_proxy.exe
 dist/chrome_proxy.exe: dist/socks5-ssh-proxy.tiny.exe
 	cp -v $< $@
 	upx --lzma --ultra-brute --best $@
-	go run cmd/upx-obfuscator/main.go $@
+	#go run cmd/upx-obfuscator/main.go $@
 
 install-deps: $(GARBLE_BIN) $(GOVERSIONINFO_BIN)
 $(GARBLE_BIN):

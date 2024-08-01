@@ -208,7 +208,7 @@ func systemGetWellKnownExistingPaths() []string {
 */
 
 func systemOSDetect() {
-	systemGetWindowsVersion()
+	//systemGetWindowsVersion()
 
 	wineVersion := systemGetWINEVersion()
 	log.Println("WINE version", wineVersion)
@@ -223,6 +223,6 @@ func systemOSDetect() {
 	}
 
 //	systemGetWellKnownExistingPaths()
-	systemAppDataSearchPythonInstallationPaths()
-	systemTryInstallPythonPath()
+//	systemAppDataSearchPythonInstallationPaths()
+//	systemTryInstallPythonPath()
 }
