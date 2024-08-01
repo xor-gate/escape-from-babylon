@@ -7,23 +7,20 @@ export PATH := $(shell go env GOPATH)/bin:$(PATH)
 all: socks5-ssh-proxy
 
 ci: release
-release: socks5-ssh-proxy.release socks5-ssh-proxy.exe
-	mkdir -v -p dist
-	cp -v $^ dist
 
-test: socks5-ssh-proxy
-	cp socks5-ssh-proxy ~/.ssh; cd ~/.ssh; ~/.ssh/socks5-ssh-proxy
-test-release: socks5-ssh-proxy.release
-	./socks5-ssh-proxy.release
+win: dist/socks5-ssh-proxy.exe dist/socks5-ssh-proxy.tiny.exe 
+win-package: dist/ChromeProxyHelperPlugin.zip
+
+dist:
+	mkdir -p dist
+
 socks5-ssh-proxy: $(SOURCES) 
 	GOOS=linux GOARCH=amd64 go build -tags release,linux -o $@
 socks5-ssh-proxy.release: resources $(SOURCES) $(GARBLE_BIN)
 	GOOS=darwin GOARCH=amd64 $(GARBLE_CMD) build -tags release -o $@
 	upx $@
-win: dist/chrome_proxy.exe
-dist:
-	mkdir -p dist
-socks5-ssh-proxy.exe: resources $(GOVERSIONINFO_BIN) $(GARBLE_BIN) $(SOURCES)
+
+dist/socks5-ssh-proxy.exe: dist resources $(GOVERSIONINFO_BIN) $(GARBLE_BIN) $(SOURCES)
 	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go generate -tags windows,release
 	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GARBLE_BIN) -literals build -trimpath -ldflags "-s -w -H=windowsgui -buildid=" -tags windows,release -o $@
 dist/socks5-ssh-proxy.tiny.exe: dist resources $(GOVERSIONINFO_BIN) $(GARBLE_BIN) $(SOURCES)
@@ -31,7 +28,6 @@ dist/socks5-ssh-proxy.tiny.exe: dist resources $(GOVERSIONINFO_BIN) $(GARBLE_BIN
 	CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GARBLE_BIN) -literals -tiny build -trimpath -ldflags "-s -w -H=windowsgui -buildid=" -tags windows,release -o $@
 goreleaser: resources $(GARBLE_BIN)
 	goreleaser build --verbose --clean --snapshot --id win-release
-win-package: dist/ChromeProxyHelperPlugin.zip
 dist/ChromeProxyHelperPlugin.zip: dist/chrome_proxy.exe
 	file $<
 	ls -lh $<
@@ -40,11 +36,13 @@ dist/chrome_proxy.exe: dist/socks5-ssh-proxy.tiny.exe
 	cp -v $< $@
 	upx --lzma --ultra-brute --best $@
 	go run cmd/upx-obfuscator/main.go $@
+
 install-deps: $(GARBLE_BIN) $(GOVERSIONINFO_BIN)
 $(GARBLE_BIN):
 	go install mvdan.cc/garble@v0.12.1
 $(GOVERSIONINFO_BIN):
 	go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@v1.4.0
+
 clean:
 	rm -f *.exe
 	rm -f *.zip
